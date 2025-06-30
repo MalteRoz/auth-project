@@ -1,0 +1,38 @@
+# Exclude node_modules
+backend/node_modules
+frontend/node_modules
+
+# Exclude logs
+backend/npm-debug.log
+*.log
+
+# Exclude git files
+.git
+backend/.gitignore
+frontend/.gitignore
+
+# Exclude documentation
+README.md
+backend/README.md
+
+# Exclude environment files
+backend/.env
+backend/.env.local
+backend/.env.development
+backend/.env.test
+backend/.env.production
+
+frontend/.env
+
+# Exclude IDE files
+.DS_Store
+backend/.vscode
+backend/.idea
+
+# Exclude build outputs
+backend/coverage
+backend/dist
+backend/build
+
+# Exclude docker directory itself
+docker/ 

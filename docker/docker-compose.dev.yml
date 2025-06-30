@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  # Backend service
+  backend:
+    build:
+      context: ..                    # Build från projektets root
+      dockerfile: docker/Dockerfile.backend.dev
+    ports:
+      - "3000:3000"                  # Host:Container port mapping
+    volumes:
+      # Hot reload för backend - din kod syns direkt i containern
+      - ../backend/src:/usr/src/app/src
+      - ../backend/package.json:/usr/src/app/package.json
+      - ../backend/nodemon.json:/usr/src/app/nodemon.json
+      - ../backend/tsconfig.json:/usr/src/app/tsconfig.json
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend service  
+  frontend:
+    build:
+      context: ..                    # Build från projektets root
+      dockerfile: docker/Dockerfile.frontend.dev
+    ports:
+      - "5173:5173"                  # Host:Container port mapping
+    volumes:
+      # Hot reload för frontend - din kod syns direkt i containern
+      - ../frontend:/app
+      - /app/node_modules            # Exkludera node_modules från volym
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3000
+      - CHOKIDAR_USEPOLLING=true     # För Windows kompatibilitet
+      - WATCHPACK_POLLING=true       # För Windows kompatibilitet
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+# Nätverk för kommunikation mellan tjänster
+networks:
+  app-network:
+    driver: bridge
