@@ -43,6 +43,21 @@ services:
       - backend
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend.dev
+    command: npm run migrate
+    volumes:
+      - ../backend/migrations:/usr/src/app/migrations
+      - ../backend/package.json:/usr/src/app/package.json
+    env_file: ../backend/.env
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://neondb_owner:npg_qHgE79sRZCIk@ep-solitary-rice-a25c07vk-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    depends_on:
+      - backend
+
 # Nätverk för kommunikation mellan tjänster
 networks:
   app-network:
